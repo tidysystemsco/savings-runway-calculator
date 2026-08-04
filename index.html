@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savings Runway Calculator — How Long Will My Money Last?</title>
+<meta name="description" content="Free calculator: find out exactly how many months your savings will last based on your expenses and income. No signup, no data stored.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --accent: #38bdf8;
+    --accent2: #34d399;
+    --danger: #f87171;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding: 24px 12px 60px;
+  }
+  .wrap { max-width: 720px; width: 100%; }
+  h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  p.sub { color: var(--muted); margin-top: 0; margin-bottom: 24px; font-size: 0.95rem; }
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; margin-top: 14px; }
+  label:first-child { margin-top: 0; }
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: var(--text);
+    font-size: 1rem;
+  }
+  input:focus { outline: 2px solid var(--accent); }
+  .result-big { font-size: 2.4rem; font-weight: 700; margin: 6px 0; }
+  .result-big.ok { color: var(--accent2); }
+  .result-big.warn { color: var(--danger); }
+  .result-label { color: var(--muted); font-size: 0.9rem; }
+  canvas { max-height: 260px; }
+  footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 20px; }
+  footer a { color: var(--accent); text-decoration: none; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .privacy-note { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Savings Runway Calculator</h1>
+  <p class="sub">Find out exactly how many months your money will last — no signup, nothing saved or sent anywhere.</p>
+
+  <div class="card">
+    <div class="grid2">
+      <div>
+        <label for="savings">Current savings ($)</label>
+        <input type="number" id="savings" value="2000" min="0">
+      </div>
+      <div>
+        <label for="income">Monthly income ($, optional)</label>
+        <input type="number" id="income" value="0" min="0">
+      </div>
+    </div>
+    <label for="expenses">Monthly expenses ($)</label>
+    <input type="number" id="expenses" value="2500" min="0">
+  </div>
+
+  <div class="card" style="text-align:center;">
+    <div class="result-label">Your money will last</div>
+    <div class="result-big" id="runwayResult">--</div>
+    <div class="result-label" id="dateResult"></div>
+  </div>
+
+  <div class="card">
+    <canvas id="chart"></canvas>
+  </div>
+
+  <p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
+
+  <footer>
+    Built with Claude &middot; a free tool, no account needed
+  </footer>
+</div>
+
+<script>
+  const savingsEl = document.getElementById('savings');
+  const incomeEl = document.getElementById('income');
+  const expensesEl = document.getElementById('expenses');
+  const runwayResult = document.getElementById('runwayResult');
+  const dateResult = document.getElementById('dateResult');
+  let chart;
+
+  function fmtMoney(n) {
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  function compute() {
+    const savings = parseFloat(savingsEl.value) || 0;
+    const income = parseFloat(incomeEl.value) || 0;
+    const expenses = parseFloat(expensesEl.value) || 0;
+    const netBurn = expenses - income;
+
+    let months = [];
+    let balances = [];
+    let balance = savings;
+    let runwayMonths = null;
+
+    if (netBurn <= 0) {
+      runwayResult.textContent = "Indefinitely";
+      runwayResult.className = "result-big ok";
+      dateResult.textContent = income > 0
+        ? "Your income covers your expenses — savings won't run out."
+        : "You're not spending more than you have coming in.";
+      for (let m = 0; m <= 24; m++) {
+        months.push(m);
+        balances.push(balance + (netBurn * -1) * m);
+      }
+    } else {
+      runwayMonths = savings / netBurn;
+      const wholeMonths = Math.floor(runwayMonths);
+      const remainderDays = Math.round((runwayMonths - wholeMonths) * 30);
+      runwayResult.textContent = wholeMonths + " mo" + (remainderDays ? ", " + remainderDays + " d" : "");
+      runwayResult.className = "result-big " + (runwayMonths < 3 ? "warn" : "ok");
+
+      const today = new Date();
+      const zeroDate = new Date(today.getFullYear(), today.getMonth() + wholeMonths, today.getDate() + remainderDays);
+      dateResult.textContent = "Runs out around " + zeroDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+
+      const chartMonths = Math.max(Math.ceil(runwayMonths) + 2, 6);
+      for (let m = 0; m <= chartMonths; m++) {
+        months.push(m);
+        balances.push(Math.max(balance - netBurn * m, 0));
+      }
+    }
+
+    if (chart) chart.destroy();
+    chart = new Chart(document.getElementById('chart'), {
+      type: 'line',
+      data: {
+        labels: months.map(m => 'Mo ' + m),
+        datasets: [{
+          label: 'Balance',
+          data: balances,
+          borderColor: '#38bdf8',
+          backgroundColor: 'rgba(56,189,248,0.15)',
+          fill: true,
+          tension: 0.25,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+          y: { ticks: { color: '#94a3b8', callback: v => '$' + v.toLocaleString() }, grid: { color: '#334155' } }
+        }
+      }
+    });
+  }
+
+  [savingsEl, incomeEl, expensesEl].forEach(el => el.addEventListener('input', compute));
+  compute();
+</script>
+</body>
+</html>
