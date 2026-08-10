@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Savings Runway Calculator — Tidy Systems Co</title>
-<meta name="description" content="Free calculator: how many months your savings will last at your current spending rate. No signup.">
+<title>Why Your Home Value Isn't Your Net Worth — Tidy Systems Co</title>
+<meta name="description" content="Net worth is everything you own minus everything you owe — and home equity is one line in that equation, not the whole picture.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
@@ -88,56 +88,23 @@ article .stat-callout { background: var(--card); border-left: 4px solid var(--go
 </head>
 <body>
 <div class="wrap">
-<nav class="topnav"><a href="index.html">Home</a><a href="savings-runway.html" class="current">Savings Runway</a><a href="investment-growth.html">Investment Growth</a><a href="compound-interest.html">Compound Interest</a><a href="debt-payoff.html">Debt Payoff</a><a href="home-affordability.html">Home Affordability</a><a href="articles.html">Articles</a></nav>
+<nav class="topnav"><a href="../index.html">Home</a><a href="../savings-runway.html">Savings Runway</a><a href="../investment-growth.html">Investment Growth</a><a href="../compound-interest.html">Compound Interest</a><a href="../debt-payoff.html">Debt Payoff</a><a href="../home-affordability.html">Home Affordability</a><a href="../articles.html" class="current">Articles</a></nav>
 
-<h1>Savings Runway Calculator</h1>
-<p class="sub">How many months your savings will last at your current spending rate. No signup, nothing stored.</p>
-<div class="card">
-  <div class="grid2">
-    <div><label for="savings">Current savings ($)</label><input type="number" id="savings" value="2000" min="0"></div>
-    <div><label for="income">Monthly income ($, optional)</label><input type="number" id="income" value="0" min="0"></div>
-  </div>
-  <label for="expenses">Monthly expenses ($)</label>
-  <input type="number" id="expenses" value="2500" min="0">
-</div>
-<div class="card" style="text-align:center;">
-  <div class="result-label">Your money will last</div>
-  <div class="result-big" id="runwayResult">--</div>
-  <div class="result-label" id="dateResult"></div>
-</div>
-<div class="card"><canvas id="chart"></canvas></div>
-<p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
-<div class="card cta-box">
-  <div class="result-label" style="margin-bottom:10px;">Want to actually plan the fix, not just see the number?</div>
-  <a href="https://tidysystemsco.gumroad.com/l/lblgzo?utm_source=calculator&utm_medium=cta" class="btn">Get the Cash Flow &amp; Budget Tracker &rarr;</a>
-</div>
-<script>
-function fmtMoney(n){return '$' + Math.round(n).toLocaleString();}
-const savingsEl=document.getElementById('savings'),incomeEl=document.getElementById('income'),expensesEl=document.getElementById('expenses');
-const runwayResult=document.getElementById('runwayResult'),dateResult=document.getElementById('dateResult');
-let chart;
-function computeRunway(){
-  const savings=parseFloat(savingsEl.value)||0, income=parseFloat(incomeEl.value)||0, expenses=parseFloat(expensesEl.value)||0;
-  const netBurn=expenses-income; let months=[],balances=[],balance=savings;
-  if(netBurn<=0){
-    runwayResult.textContent="Indefinitely"; runwayResult.className="result-big ok";
-    dateResult.textContent = income>0 ? "Your income covers your expenses — savings won't run out." : "You're not spending more than you have coming in.";
-    for(let m=0;m<=24;m++){months.push(m);balances.push(balance+(netBurn*-1)*m);}
-  } else {
-    const runwayMonths=savings/netBurn, wholeMonths=Math.floor(runwayMonths), remainderDays=Math.round((runwayMonths-wholeMonths)*30);
-    runwayResult.textContent=wholeMonths+" mo"+(remainderDays?", "+remainderDays+" d":"");
-    runwayResult.className="result-big "+(runwayMonths<3?"warn":"ok");
-    const today=new Date(); const zeroDate=new Date(today.getFullYear(),today.getMonth()+wholeMonths,today.getDate()+remainderDays);
-    dateResult.textContent="Runs out around "+zeroDate.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
-    const chartMonths=Math.max(Math.ceil(runwayMonths)+2,6);
-    for(let m=0;m<=chartMonths;m++){months.push(m);balances.push(Math.max(balance-netBurn*m,0));}
-  }
-  if(chart) chart.destroy();
-  chart=new Chart(document.getElementById('chart'),{type:'line',data:{labels:months.map(m=>'Mo '+m),datasets:[{label:'Balance',data:balances,borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,0.15)',fill:true,tension:0.25,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},y:{ticks:{color:'#94a3b8',callback:v=>'$'+v.toLocaleString()},grid:{color:'#334155'}}}}});
-}
-[savingsEl,incomeEl,expensesEl].forEach(el=>el.addEventListener('input',computeRunway));
-computeRunway();
-</script>
+<article>
+<h1>Why Your Home Value Isn't Your Net Worth</h1>
+<p>"My house is worth $400,000" is a common answer to "what's your net worth" — and it's an incomplete one, even when the home value itself is accurate.</p>
+
+<div class="stat-callout">Net worth = everything you own (liquid and illiquid) minus everything you owe. Home equity counts, but it's one line in that calculation, not the whole picture.</div>
+
+<h2>What actually goes into the calculation</h2>
+<p>On the asset side: cash and savings, investment and retirement accounts, home equity (home value minus remaining mortgage balance — not the full home value), vehicles, and other significant assets. On the liability side: mortgage balance, car loans, credit card debt, student loans, and any other money owed. Net worth is the first total minus the second.</p>
+
+<h2>Why home equity is a different kind of asset</h2>
+<p>Home equity is real, but it isn't liquid — you can't spend it next month without selling the home or taking on new debt against it (a HELOC or cash-out refinance), both of which have their own costs. Treating home equity the same as a savings account balance overstates how much financial flexibility you actually have in an emergency.</p>
+
+<h2>Why this distinction matters</h2>
+<p>Someone with significant home equity but minimal liquid savings can be more financially fragile day-to-day than someone with a smaller net worth spread across accessible accounts. Tracking liquid net worth separately from total net worth gives a much more accurate read on your actual short-term financial flexibility.</p>
+</article>
 
 <footer>
   Built by <a href="https://tidysystemsco.gumroad.com" style="color:var(--accent);">Tidy Systems Co</a> &middot; free tools, no account needed

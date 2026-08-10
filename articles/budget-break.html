@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Savings Runway Calculator — Tidy Systems Co</title>
-<meta name="description" content="Free calculator: how many months your savings will last at your current spending rate. No signup.">
+<title>3 Signs Your Budget Is One Paycheck From Breaking — Tidy Systems Co</title>
+<meta name="description" content="If your budget only survives a perfect month, it's not really a budget. Here are the 3 warning signs and the one number that fixes it.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
@@ -88,57 +88,26 @@ article .stat-callout { background: var(--card); border-left: 4px solid var(--go
 </head>
 <body>
 <div class="wrap">
-<nav class="topnav"><a href="index.html">Home</a><a href="savings-runway.html" class="current">Savings Runway</a><a href="investment-growth.html">Investment Growth</a><a href="compound-interest.html">Compound Interest</a><a href="debt-payoff.html">Debt Payoff</a><a href="home-affordability.html">Home Affordability</a><a href="articles.html">Articles</a></nav>
+<nav class="topnav"><a href="../index.html">Home</a><a href="../savings-runway.html">Savings Runway</a><a href="../investment-growth.html">Investment Growth</a><a href="../compound-interest.html">Compound Interest</a><a href="../debt-payoff.html">Debt Payoff</a><a href="../home-affordability.html">Home Affordability</a><a href="../articles.html" class="current">Articles</a></nav>
 
-<h1>Savings Runway Calculator</h1>
-<p class="sub">How many months your savings will last at your current spending rate. No signup, nothing stored.</p>
-<div class="card">
-  <div class="grid2">
-    <div><label for="savings">Current savings ($)</label><input type="number" id="savings" value="2000" min="0"></div>
-    <div><label for="income">Monthly income ($, optional)</label><input type="number" id="income" value="0" min="0"></div>
-  </div>
-  <label for="expenses">Monthly expenses ($)</label>
-  <input type="number" id="expenses" value="2500" min="0">
-</div>
-<div class="card" style="text-align:center;">
-  <div class="result-label">Your money will last</div>
-  <div class="result-big" id="runwayResult">--</div>
-  <div class="result-label" id="dateResult"></div>
-</div>
-<div class="card"><canvas id="chart"></canvas></div>
-<p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
-<div class="card cta-box">
-  <div class="result-label" style="margin-bottom:10px;">Want to actually plan the fix, not just see the number?</div>
-  <a href="https://tidysystemsco.gumroad.com/l/lblgzo?utm_source=calculator&utm_medium=cta" class="btn">Get the Cash Flow &amp; Budget Tracker &rarr;</a>
-</div>
-<script>
-function fmtMoney(n){return '$' + Math.round(n).toLocaleString();}
-const savingsEl=document.getElementById('savings'),incomeEl=document.getElementById('income'),expensesEl=document.getElementById('expenses');
-const runwayResult=document.getElementById('runwayResult'),dateResult=document.getElementById('dateResult');
-let chart;
-function computeRunway(){
-  const savings=parseFloat(savingsEl.value)||0, income=parseFloat(incomeEl.value)||0, expenses=parseFloat(expensesEl.value)||0;
-  const netBurn=expenses-income; let months=[],balances=[],balance=savings;
-  if(netBurn<=0){
-    runwayResult.textContent="Indefinitely"; runwayResult.className="result-big ok";
-    dateResult.textContent = income>0 ? "Your income covers your expenses — savings won't run out." : "You're not spending more than you have coming in.";
-    for(let m=0;m<=24;m++){months.push(m);balances.push(balance+(netBurn*-1)*m);}
-  } else {
-    const runwayMonths=savings/netBurn, wholeMonths=Math.floor(runwayMonths), remainderDays=Math.round((runwayMonths-wholeMonths)*30);
-    runwayResult.textContent=wholeMonths+" mo"+(remainderDays?", "+remainderDays+" d":"");
-    runwayResult.className="result-big "+(runwayMonths<3?"warn":"ok");
-    const today=new Date(); const zeroDate=new Date(today.getFullYear(),today.getMonth()+wholeMonths,today.getDate()+remainderDays);
-    dateResult.textContent="Runs out around "+zeroDate.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
-    const chartMonths=Math.max(Math.ceil(runwayMonths)+2,6);
-    for(let m=0;m<=chartMonths;m++){months.push(m);balances.push(Math.max(balance-netBurn*m,0));}
-  }
-  if(chart) chart.destroy();
-  chart=new Chart(document.getElementById('chart'),{type:'line',data:{labels:months.map(m=>'Mo '+m),datasets:[{label:'Balance',data:balances,borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,0.15)',fill:true,tension:0.25,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},y:{ticks:{color:'#94a3b8',callback:v=>'$'+v.toLocaleString()},grid:{color:'#334155'}}}}});
-}
-[savingsEl,incomeEl,expensesEl].forEach(el=>el.addEventListener('input',computeRunway));
-computeRunway();
-</script>
+<article>
+<h1>3 Signs Your Budget Is One Paycheck From Breaking</h1>
+<p>Most budgets don't fail because of one big mistake. They fail quietly, over months, in three specific ways — and all three are fixable once you can see them.</p>
 
+<h2>1. Your "wants" spending creeps every time you get a raise</h2>
+<p>This is lifestyle creep in its most common form. A raise arrives, and within a month or two, monthly spending has quietly absorbed all of it — a nicer apartment, more takeout, a subscription or two. Nothing about it feels reckless in the moment. It just means the raise never actually reached savings or debt payoff.</p>
+
+<h2>2. You check your balance instead of tracking a number</h2>
+<p>Checking your bank balance tells you what's true right now. It doesn't tell you whether you're on pace for the month, or what happens if an unexpected bill lands next week. A balance is a snapshot; a budget is a forecast. Relying on the snapshot alone means you usually find out you're in trouble the same week it happens, not weeks in advance.</p>
+
+<div class="stat-callout">The fix for both of the above starts with a single number: what your fixed bills actually add up to each month.</div>
+
+<h2>3. You have no idea what your fixed bills add up to</h2>
+<p>Rent or mortgage, insurance, minimum debt payments, utilities, subscriptions — add them up once, in full, and you have the one number that makes everything else easy. Once you know your true fixed-cost floor, you instantly know how much flexible spending you actually have left, whether a raise is truly "extra," and how much runway your savings would give you if income stopped.</p>
+
+<p>That last question — how long your savings would actually last — is worth answering with real numbers rather than a guess. Our <a href="savings-runway.html">Savings Runway Calculator</a> does the math for you in about ten seconds: current savings, monthly expenses, done.</p>
+</article>
+<div class="card cta-box"><a href="../savings-runway.html" class="btn alt">Check your own runway →</a></div>
 <footer>
   Built by <a href="https://tidysystemsco.gumroad.com" style="color:var(--accent);">Tidy Systems Co</a> &middot; free tools, no account needed
 </footer>
