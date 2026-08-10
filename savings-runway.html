@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savings Runway Calculator — Tidy Systems Co</title>
+<meta name="description" content="Free calculator: how many months your savings will last at your current spending rate. No signup.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --accent: #38bdf8;
+  --accent2: #34d399;
+  --danger: #f87171;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --gold: #e4a94b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  padding: 0 12px 60px;
+}
+.wrap { max-width: 720px; width: 100%; }
+a { color: var(--accent); }
+nav.topnav {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 16px 0 8px; margin-bottom: 8px;
+}
+nav.topnav a {
+  font-size: 0.8rem; text-decoration: none; color: var(--muted);
+  background: var(--card); padding: 6px 10px; border-radius: 20px; border: 1px solid #334155;
+}
+nav.topnav a.current { color: #0f172a; background: var(--accent); border-color: var(--accent); font-weight: 700; }
+h1 { font-size: 1.6rem; margin-bottom: 4px; }
+h2 { font-size: 1.2rem; margin-top: 28px; }
+p.sub { color: var(--muted); margin-top: 0; margin-bottom: 20px; font-size: 0.95rem; }
+.tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.tab-btn {
+  flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #334155;
+  background: var(--card); color: var(--muted); font-size: 0.95rem; font-weight: 600; cursor: pointer;
+}
+.tab-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+.card {
+  background: var(--card); border-radius: 14px; padding: 22px; margin-bottom: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; margin-top: 14px; }
+label:first-child { margin-top: 0; }
+input {
+  width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155;
+  background: #0f172a; color: var(--text); font-size: 1rem;
+}
+input:focus { outline: 2px solid var(--accent); }
+.result-big { font-size: 2.4rem; font-weight: 700; margin: 6px 0; }
+.result-big.ok { color: var(--accent2); }
+.result-big.warn { color: var(--danger); }
+.result-label { color: var(--muted); font-size: 0.9rem; }
+canvas { max-height: 260px; }
+footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 20px; }
+footer a { text-decoration: none; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.privacy-note { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+.compare-row { display: flex; gap: 16px; text-align: center; }
+.compare-col { flex: 1; }
+.compare-col .amt { font-size: 1.5rem; font-weight: 700; }
+.compare-col .amt.gold { color: var(--gold); }
+.compare-col .amt.muted { color: var(--muted); }
+.gap-line { text-align: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid #334155; }
+.card-list a { display: block; padding: 14px 16px; margin-bottom: 10px; background: var(--card); border-radius: 12px; text-decoration: none; border: 1px solid #334155; }
+.card-list a:hover { border-color: var(--accent); }
+.card-list .t { color: var(--text); font-weight: 600; font-size: 1rem; }
+.card-list .d { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+article p { line-height: 1.6; }
+article .stat-callout { background: var(--card); border-left: 4px solid var(--gold); padding: 14px 18px; border-radius: 8px; margin: 18px 0; font-size: 1.05rem; }
+.cta-box { text-align: center; }
+.cta-box .btn { display: inline-block; background: var(--accent2); color: #0f172a; font-weight: 700; padding: 12px 22px; border-radius: 8px; text-decoration: none; margin: 6px; }
+.cta-box .btn.alt { background: var(--accent); }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<nav class="topnav"><a href="index.html">Home</a><a href="savings-runway.html" class="current">Savings Runway</a><a href="investment-growth.html">Investment Growth</a><a href="compound-interest.html">Compound Interest</a><a href="debt-payoff.html">Debt Payoff</a><a href="home-affordability.html">Home Affordability</a><a href="articles.html">Articles</a></nav>
+
+<h1>Savings Runway Calculator</h1>
+<p class="sub">How many months your savings will last at your current spending rate. No signup, nothing stored.</p>
+<div class="card">
+  <div class="grid2">
+    <div><label for="savings">Current savings ($)</label><input type="number" id="savings" value="2000" min="0"></div>
+    <div><label for="income">Monthly income ($, optional)</label><input type="number" id="income" value="0" min="0"></div>
+  </div>
+  <label for="expenses">Monthly expenses ($)</label>
+  <input type="number" id="expenses" value="2500" min="0">
+</div>
+<div class="card" style="text-align:center;">
+  <div class="result-label">Your money will last</div>
+  <div class="result-big" id="runwayResult">--</div>
+  <div class="result-label" id="dateResult"></div>
+</div>
+<div class="card"><canvas id="chart"></canvas></div>
+<p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
+<div class="card cta-box">
+  <div class="result-label" style="margin-bottom:10px;">Want to actually plan the fix, not just see the number?</div>
+  <a href="https://tidysystemsco.gumroad.com/l/lblgzo?utm_source=calculator&utm_medium=cta" class="btn">Get the Cash Flow &amp; Budget Tracker &rarr;</a>
+</div>
+<script>
+function fmtMoney(n){return '$' + Math.round(n).toLocaleString();}
+const savingsEl=document.getElementById('savings'),incomeEl=document.getElementById('income'),expensesEl=document.getElementById('expenses');
+const runwayResult=document.getElementById('runwayResult'),dateResult=document.getElementById('dateResult');
+let chart;
+function computeRunway(){
+  const savings=parseFloat(savingsEl.value)||0, income=parseFloat(incomeEl.value)||0, expenses=parseFloat(expensesEl.value)||0;
+  const netBurn=expenses-income; let months=[],balances=[],balance=savings;
+  if(netBurn<=0){
+    runwayResult.textContent="Indefinitely"; runwayResult.className="result-big ok";
+    dateResult.textContent = income>0 ? "Your income covers your expenses — savings won't run out." : "You're not spending more than you have coming in.";
+    for(let m=0;m<=24;m++){months.push(m);balances.push(balance+(netBurn*-1)*m);}
+  } else {
+    const runwayMonths=savings/netBurn, wholeMonths=Math.floor(runwayMonths), remainderDays=Math.round((runwayMonths-wholeMonths)*30);
+    runwayResult.textContent=wholeMonths+" mo"+(remainderDays?", "+remainderDays+" d":"");
+    runwayResult.className="result-big "+(runwayMonths<3?"warn":"ok");
+    const today=new Date(); const zeroDate=new Date(today.getFullYear(),today.getMonth()+wholeMonths,today.getDate()+remainderDays);
+    dateResult.textContent="Runs out around "+zeroDate.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+    const chartMonths=Math.max(Math.ceil(runwayMonths)+2,6);
+    for(let m=0;m<=chartMonths;m++){months.push(m);balances.push(Math.max(balance-netBurn*m,0));}
+  }
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById('chart'),{type:'line',data:{labels:months.map(m=>'Mo '+m),datasets:[{label:'Balance',data:balances,borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,0.15)',fill:true,tension:0.25,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},y:{ticks:{color:'#94a3b8',callback:v=>'$'+v.toLocaleString()},grid:{color:'#334155'}}}}});
+}
+[savingsEl,incomeEl,expensesEl].forEach(el=>el.addEventListener('input',computeRunway));
+computeRunway();
+</script>
+
+<footer>
+  Built by <a href="https://tidysystemsco.gumroad.com" style="color:var(--accent);">Tidy Systems Co</a> &middot; free tools, no account needed
+</footer>
+</div>
+</body>
+</html>
