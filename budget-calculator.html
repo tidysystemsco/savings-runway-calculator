@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About — Tidy Systems Co</title>
-<meta name="description" content="Free personal finance calculators and no-fluff breakdowns, built by one person. No signup, nothing stored.">
+<title>50/30/20 Budget Calculator — Tidy Systems Co</title>
+<meta name="description" content="Free calculator: split your monthly take-home pay into needs, wants, and savings/debt using the 50/30/20 framework. No signup.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
@@ -83,22 +83,61 @@ article .stat-callout { background: var(--card); border-left: 4px solid var(--go
 .cta-box { text-align: center; }
 .cta-box .btn { display: inline-block; background: var(--accent2); color: #0f172a; font-weight: 700; padding: 12px 22px; border-radius: 8px; text-decoration: none; margin: 6px; }
 .cta-box .btn.alt { background: var(--accent); }
+.remove-row { background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.85rem; float:right; }
+.sub-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+.sub-row input[type=text] { flex:2; }
+.sub-row input[type=number] { flex:1; }
 </style>
 
 </head>
 <body>
 <div class="wrap">
-<nav class="topnav"><a href="index.html">Home</a><a href="calculators.html">Calculators</a><a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="about.html" class="current">About</a></nav>
+<nav class="topnav"><a href="index.html">Home</a><a href="calculators.html" class="current">Calculators</a><a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="about.html">About</a></nav>
 
-<h1>About Tidy Systems Co</h1>
-<p class="sub">Free money tools and straight-talk breakdowns, built by one person.</p>
+<h1>50/30/20 Budget Calculator</h1>
+<p class="sub">Enter your monthly take-home pay. See the needs / wants / savings &amp; debt split the 50/30/20 framework recommends.</p>
 <div class="card">
-<p>Tidy Systems Co started as a handful of spreadsheets I built for myself to answer the questions most budgeting advice glosses over: how many months would my savings actually cover if income stopped, what a raise is really worth if I don't redirect it, whether my debt-to-income ratio is actually fine or just fine on paper.</p>
-<p>Those spreadsheets turned into the calculators on this site &mdash; free, no signup, nothing you type is stored anywhere. If a number matters to your finances and takes more than a gut check to get right, it's a candidate for a calculator here.</p>
-<p>The articles follow the same rule as the tools: real numbers, no vague advice, no "it depends" without an actual answer attached. I'm not a financial advisor, and nothing here is personalized advice &mdash; it's the math and the framing I wish had been easier to find when I needed it.</p>
-<p>The free tools are funded by a handful of paid templates and guides in the <a href="shop.html">shop</a> &mdash; a budgeting spreadsheet, plus a couple of guides outside pure personal finance (wedding vendor contracts, job search). If one's useful to you, it helps keep the calculators free. If not, the calculators stay free either way.</p>
-<p>Questions, typos, broken calculators &mdash; reach out anytime through <a href="https://tidysystemsco.gumroad.com">Gumroad</a>.</p>
+  <label for="income">Monthly take-home income ($, after tax)</label>
+  <input type="number" id="income" value="4000" min="0">
 </div>
+<div class="card">
+  <div class="grid3">
+    <div style="text-align:center;">
+      <div class="result-label">Needs (50%)</div>
+      <div class="result-big ok" id="needsOut">--</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="result-label">Wants (30%)</div>
+      <div class="result-big" id="wantsOut" style="color:var(--accent);">--</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="result-label">Savings &amp; Debt (20%)</div>
+      <div class="result-big" id="saveOut" style="color:var(--gold);">--</div>
+    </div>
+  </div>
+</div>
+<div class="card"><canvas id="chart"></canvas></div>
+<p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
+<p style="color:var(--muted); font-size:0.9rem;">Needs: housing, utilities, minimum debt payments, insurance, groceries, transportation. Wants: everything discretionary. Savings &amp; debt: retirement, extra debt payoff, emergency fund. The 20% isn't optional here &mdash; it's the line that actually builds your <a href="emergency-fund-calculator.html">emergency fund</a> and pays down debt faster than the minimum.</p>
+<div class="card cta-box">
+  <div class="result-label" style="margin-bottom:10px;">Want a done-for-you spreadsheet that tracks this every month?</div>
+  <a href="https://tidysystemsco.gumroad.com/l/lblgzo?utm_source=budget_calculator&amp;utm_medium=cta" class="btn">Get the Cash Flow &amp; Budget Tracker &rarr;</a>
+</div>
+<script>
+const incomeEl=document.getElementById('income');
+const needsOut=document.getElementById('needsOut'), wantsOut=document.getElementById('wantsOut'), saveOut=document.getElementById('saveOut');
+let chart;
+function fmt(n){ return "$"+n.toLocaleString(undefined,{maximumFractionDigits:0}); }
+function compute(){
+  const income=parseFloat(incomeEl.value)||0;
+  const needs=income*0.5, wants=income*0.3, save=income*0.2;
+  needsOut.textContent=fmt(needs); wantsOut.textContent=fmt(wants); saveOut.textContent=fmt(save);
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById('chart'), {type:'doughnut', data:{labels:['Needs (50%)','Wants (30%)','Savings & Debt (20%)'], datasets:[{data:[needs,wants,save], backgroundColor:['#34d399','#38bdf8','#e4a94b'], borderWidth:0}]}, options:{responsive:true, plugins:{legend:{position:'bottom', labels:{color:'#94a3b8'}}}}});
+}
+incomeEl.addEventListener('input', compute);
+compute();
+</script>
 <div class="card" style="text-align:center;">
   <div class="t" style="font-weight:600; margin-bottom:6px;">Get new breakdowns in your inbox</div>
   <div class="d" style="color:var(--muted); font-size:0.85rem; margin-bottom:14px;">One email when a new calculator or article drops. No spam.</div>

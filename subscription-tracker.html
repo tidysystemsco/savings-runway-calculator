@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About — Tidy Systems Co</title>
-<meta name="description" content="Free personal finance calculators and no-fluff breakdowns, built by one person. No signup, nothing stored.">
+<title>Subscription Cost Tracker — Tidy Systems Co</title>
+<meta name="description" content="Free tool: add up your recurring subscriptions and see the real monthly and annual total. No signup.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
@@ -83,22 +83,67 @@ article .stat-callout { background: var(--card); border-left: 4px solid var(--go
 .cta-box { text-align: center; }
 .cta-box .btn { display: inline-block; background: var(--accent2); color: #0f172a; font-weight: 700; padding: 12px 22px; border-radius: 8px; text-decoration: none; margin: 6px; }
 .cta-box .btn.alt { background: var(--accent); }
+.remove-row { background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.85rem; float:right; }
+.sub-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+.sub-row input[type=text] { flex:2; }
+.sub-row input[type=number] { flex:1; }
 </style>
 
 </head>
 <body>
 <div class="wrap">
-<nav class="topnav"><a href="index.html">Home</a><a href="calculators.html">Calculators</a><a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="about.html" class="current">About</a></nav>
+<nav class="topnav"><a href="index.html">Home</a><a href="calculators.html" class="current">Calculators</a><a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="about.html">About</a></nav>
 
-<h1>About Tidy Systems Co</h1>
-<p class="sub">Free money tools and straight-talk breakdowns, built by one person.</p>
-<div class="card">
-<p>Tidy Systems Co started as a handful of spreadsheets I built for myself to answer the questions most budgeting advice glosses over: how many months would my savings actually cover if income stopped, what a raise is really worth if I don't redirect it, whether my debt-to-income ratio is actually fine or just fine on paper.</p>
-<p>Those spreadsheets turned into the calculators on this site &mdash; free, no signup, nothing you type is stored anywhere. If a number matters to your finances and takes more than a gut check to get right, it's a candidate for a calculator here.</p>
-<p>The articles follow the same rule as the tools: real numbers, no vague advice, no "it depends" without an actual answer attached. I'm not a financial advisor, and nothing here is personalized advice &mdash; it's the math and the framing I wish had been easier to find when I needed it.</p>
-<p>The free tools are funded by a handful of paid templates and guides in the <a href="shop.html">shop</a> &mdash; a budgeting spreadsheet, plus a couple of guides outside pure personal finance (wedding vendor contracts, job search). If one's useful to you, it helps keep the calculators free. If not, the calculators stay free either way.</p>
-<p>Questions, typos, broken calculators &mdash; reach out anytime through <a href="https://tidysystemsco.gumroad.com">Gumroad</a>.</p>
+<h1>Subscription Cost Tracker</h1>
+<p class="sub">Add every recurring subscription you can find. See what it actually costs you per month and per year.</p>
+<div class="card" id="rowsCard">
+  <div id="rows"></div>
+  <button type="button" id="addRow" style="background:var(--card); border:1px solid #334155; color:var(--accent); padding:8px 14px; border-radius:8px; cursor:pointer; margin-top:6px;">+ Add subscription</button>
 </div>
+<div class="card">
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="result-label">Monthly total</div>
+      <div class="amt gold" id="monthlyOut">$0</div>
+    </div>
+    <div class="compare-col">
+      <div class="result-label">Annual total</div>
+      <div class="amt" id="annualOut" style="color:var(--danger);">$0</div>
+    </div>
+  </div>
+</div>
+<p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
+<div class="card cta-box">
+  <div class="result-label" style="margin-bottom:10px;">Want this tracked automatically alongside the rest of your budget?</div>
+  <a href="https://tidysystemsco.gumroad.com/l/lblgzo?utm_source=subscription_tracker&amp;utm_medium=cta" class="btn">Get the Cash Flow &amp; Budget Tracker &rarr;</a>
+</div>
+<script>
+const rowsEl=document.getElementById('rows');
+const monthlyOut=document.getElementById('monthlyOut'), annualOut=document.getElementById('annualOut');
+function fmt(n){ return "$"+n.toLocaleString(undefined,{maximumFractionDigits:0}); }
+function addRow(name, cost){
+  const div=document.createElement('div');
+  div.className='sub-row';
+  div.innerHTML='<input type="text" placeholder="Subscription name" value="'+(name||'')+'"><input type="number" placeholder="$/mo" min="0" value="'+(cost!==undefined?cost:'')+'"><button type="button" class="remove-row">Remove</button>';
+  rowsEl.appendChild(div);
+  div.querySelector('.remove-row').addEventListener('click', ()=>{ div.remove(); compute(); });
+  div.querySelectorAll('input').forEach(inp=>inp.addEventListener('input', compute));
+}
+document.getElementById('addRow').addEventListener('click', ()=>addRow());
+function compute(){
+  let total=0;
+  rowsEl.querySelectorAll('.sub-row').forEach(row=>{
+    const cost=parseFloat(row.querySelectorAll('input')[1].value)||0;
+    total+=cost;
+  });
+  monthlyOut.textContent=fmt(total);
+  annualOut.textContent=fmt(total*12);
+}
+addRow('Streaming service', 15.99);
+addRow('Gym membership', 39.99);
+addRow('Cloud storage', 9.99);
+compute();
+</script>
 <div class="card" style="text-align:center;">
   <div class="t" style="font-weight:600; margin-bottom:6px;">Get new breakdowns in your inbox</div>
   <div class="d" style="color:var(--muted); font-size:0.85rem; margin-bottom:14px;">One email when a new calculator or article drops. No spam.</div>
