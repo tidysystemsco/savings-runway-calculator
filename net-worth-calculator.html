@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personal Finance Breakdowns — Tidy Systems Co</title>
-<meta name="description" content="Straight-talk personal finance explainers with real numbers, no fluff.">
+<title>Net Worth Calculator — Tidy Systems Co</title>
+<meta name="description" content="Free calculator: assets minus liabilities, plus liquid net worth excluding home equity. No signup, nothing stored.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
@@ -88,28 +88,68 @@ article .stat-callout { background: var(--card); border-left: 4px solid var(--go
 </head>
 <body>
 <div class="wrap">
-<nav class="topnav"><a href="index.html">Home</a><a href="savings-runway.html">Savings Runway</a><a href="investment-growth.html">Investment Growth</a><a href="compound-interest.html">Compound Interest</a><a href="debt-payoff.html">Debt Payoff</a><a href="home-affordability.html">Home Affordability</a><a href="dti-calculator.html">DTI</a><a href="net-worth-calculator.html">Net Worth</a><a href="job-search-runway.html">Job Search Runway</a><a href="articles.html" class="current">Articles</a><a href="shop.html">Shop</a><a href="about.html">About</a></nav>
+<nav class="topnav"><a href="index.html">Home</a><a href="savings-runway.html">Savings Runway</a><a href="investment-growth.html">Investment Growth</a><a href="compound-interest.html">Compound Interest</a><a href="debt-payoff.html">Debt Payoff</a><a href="home-affordability.html">Home Affordability</a><a href="dti-calculator.html">DTI</a><a href="net-worth-calculator.html" class="current">Net Worth</a><a href="job-search-runway.html">Job Search Runway</a><a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="about.html">About</a></nav>
 
-<h1>Personal Finance Breakdowns</h1>
-<p class="sub">Straight-talk explainers with real numbers — no fluff, no vague advice.</p>
-<div class="card-list">
-<a href="articles/budget-break.html"><div class="t">3 Signs Your Budget Is One Paycheck From Breaking</div><div class="d">If your budget only survives a perfect month, it's not really a budget. Here are the 3 warning signs and the one number that fixes it.</div></a>
-<a href="articles/min-payment.html"><div class="t">The Real Cost of Paying Only the Minimum on Credit Card Debt</div><div class="d">A $5,000 balance at 22% APR, paying only the minimum, costs $11,000+ before it's gone. Here's the real math and what changes it.</div></a>
-<a href="articles/emergency-runway.html"><div class="t">The One Number That Tells You If You're One Emergency From Broke</div><div class="d">Emergency fund ÷ monthly essential expenses = your runway in months. Here's why that ratio matters more than the raw dollar amount.</div></a>
-<a href="articles/guilt-free-budget.html"><div class="t">Why Most Budgets Fail in 3 Weeks (And the Fix)</div><div class="d">Budgets that cut all fun spending don't fail because people lack discipline. They fail because they're not built to be sustainable.</div></a>
-<a href="articles/subscription-trap.html"><div class="t">How to Find the Subscriptions You Forgot You're Paying For</div><div class="d">The average person is paying for subscriptions they no longer use. Here's how to find $30-60/month back in five minutes.</div></a>
-<a href="articles/lifestyle-creep.html"><div class="t">Why Every Raise You Don't Redirect Is Costing You Your Retirement</div><div class="d">A $500/month raise, spent instead of invested, vs. the same $500 invested at 7% — over 20 years the gap is six figures.</div></a>
-<a href="articles/savings-runway-comparison.html"><div class="t">Same $10,000 Savings, Completely Different Safety Margin</div><div class="d">Two people can have the identical savings balance and be in totally different financial positions. Here's why the balance alone is meaningless.</div></a>
-<a href="articles/net-worth-myth.html"><div class="t">Why Your Home Value Isn't Your Net Worth</div><div class="d">Net worth is everything you own minus everything you owe — and home equity is one line in that equation, not the whole picture.</div></a>
-<a href="articles/financially-fragile.html"><div class="t">You Can Earn Six Figures and Still Be One Paycheck From Trouble</div><div class="d">Income solves earning problems. It doesn't automatically solve structure problems. Here are the four signs that separate the two.</div></a>
-<a href="articles/cost-of-waiting.html"><div class="t">What Waiting 5 Years to Invest Actually Costs You</div><div class="d">$200/month starting at 25 vs. starting at 30, both to age 65 at 7% — those five years alone create a six-figure gap.</div></a>
-<a href="articles/debt-to-income.html"><div class="t">The Debt-to-Income Ratio That Actually Matters</div><div class="d">DTI = total monthly debt payments ÷ gross monthly income. Under 36% is safe, 36-43% is caution, 43%+ is a red flag to most lenders.</div></a>
-<a href="articles/renting-myth.html"><div class="t">Is Renting Really "Throwing Money Away"?</div><div class="d">Renting isn't free, but owning isn't either. The real comparison is rent vs. every hidden cost of owning — not rent vs. a mortgage payment.</div></a>
-<a href="articles/layoff-red-flags.html"><div class="t">4 Signs You're One Layoff Away From Financial Disaster</div><div class="d">You can be making great money and still be exposed. Here are the four warning signs and why one together is a pattern, not a coincidence.</div></a>
-<a href="articles/wedding-vendor-contracts.html"><div class="t">What to Put in Writing With Every Wedding Vendor</div><div class="d">Most wedding vendor disputes trace back to one thing: an assumption that was never actually written down. Here's what to get in writing.</div></a>
-<a href="articles/job-search-money-runway.html"><div class="t">How Many Months Can You Afford to Job Search?</div><div class="d">Accessible savings ÷ monthly essential expenses = your job search runway in months. Here's how to calculate and extend it.</div></a>
+<h1>Net Worth Calculator</h1>
+<p class="sub">Everything you own minus everything you owe &mdash; plus a look at your liquid net worth, which strips out home equity.</p>
+<div class="card">
+  <h2 style="margin-top:0; font-size:1rem; color:var(--muted);">Assets</h2>
+  <div class="grid2">
+    <div><label for="cash">Cash &amp; savings ($)</label><input type="number" id="cash" value="8000" min="0"></div>
+    <div><label for="invest">Investments &amp; retirement ($)</label><input type="number" id="invest" value="15000" min="0"></div>
+  </div>
+  <div class="grid2">
+    <div><label for="homeEquity">Home equity ($)</label><input type="number" id="homeEquity" value="0" min="0"></div>
+    <div><label for="otherAssets">Vehicles &amp; other assets ($)</label><input type="number" id="otherAssets" value="5000" min="0"></div>
+  </div>
 </div>
-
+<div class="card">
+  <h2 style="margin-top:0; font-size:1rem; color:var(--muted);">Liabilities</h2>
+  <div class="grid2">
+    <div><label for="mortgage">Mortgage balance ($)</label><input type="number" id="mortgage" value="0" min="0"></div>
+    <div><label for="carLoans">Car loans ($)</label><input type="number" id="carLoans" value="6000" min="0"></div>
+  </div>
+  <div class="grid2">
+    <div><label for="cc">Credit card debt ($)</label><input type="number" id="cc" value="2000" min="0"></div>
+    <div><label for="otherDebt">Student loans &amp; other debt ($)</label><input type="number" id="otherDebt" value="10000" min="0"></div>
+  </div>
+</div>
+<div class="card" style="text-align:center;">
+  <div class="result-label">Your net worth</div>
+  <div class="result-big" id="netWorthResult">--</div>
+</div>
+<div class="card">
+  <div class="compare-row">
+    <div class="compare-col"><div class="result-label">Total net worth</div><div class="amt" id="totalAmt">--</div></div>
+    <div class="compare-col"><div class="result-label">Liquid net worth (excl. home equity)</div><div class="amt gold" id="liquidAmt">--</div></div>
+  </div>
+  <div class="gap-line result-label">Home equity is real, but it's not cash you can spend without selling or borrowing against it.</div>
+</div>
+<p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
+<div class="card cta-box">
+  <div class="result-label" style="margin-bottom:10px;">Want the full picture behind this number?</div>
+  <a href="articles/net-worth-myth.html" class="btn alt">Read: Why Your Home Value Isn't Your Net Worth &rarr;</a>
+</div>
+<script>
+function fmtMoney(n){return (n<0?'-':'') + '$' + Math.round(Math.abs(n)).toLocaleString();}
+const ids=['cash','invest','homeEquity','otherAssets','mortgage','carLoans','cc','otherDebt'];
+const els={}; ids.forEach(id=>els[id]=document.getElementById(id));
+const netWorthResult=document.getElementById('netWorthResult'), totalAmt=document.getElementById('totalAmt'), liquidAmt=document.getElementById('liquidAmt');
+function computeNetWorth(){
+  const v=id=>parseFloat(els[id].value)||0;
+  const totalAssets = v('cash')+v('invest')+v('homeEquity')+v('otherAssets');
+  const totalLiabilities = v('mortgage')+v('carLoans')+v('cc')+v('otherDebt');
+  const netWorth = totalAssets - totalLiabilities;
+  const liquidAssets = v('cash')+v('invest')+v('otherAssets');
+  const liquidNetWorth = liquidAssets - totalLiabilities;
+  netWorthResult.textContent = fmtMoney(netWorth);
+  netWorthResult.className = "result-big " + (netWorth>=0 ? "ok":"warn");
+  totalAmt.textContent = fmtMoney(netWorth);
+  liquidAmt.textContent = fmtMoney(liquidNetWorth);
+}
+ids.forEach(id=>els[id].addEventListener('input', computeNetWorth));
+computeNetWorth();
+</script>
 <div class="card" style="text-align:center;">
   <div class="t" style="font-weight:600; margin-bottom:6px;">Get new breakdowns in your inbox</div>
   <div class="d" style="color:var(--muted); font-size:0.85rem; margin-bottom:14px;">One email when a new calculator or article drops. No spam.</div>
