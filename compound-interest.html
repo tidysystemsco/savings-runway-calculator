@@ -8,14 +8,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --accent: #38bdf8;
+  --bg: #0f1b27;
+  --card: #16232f;
+  --accent: #e8a33d;
   --accent2: #34d399;
   --danger: #f87171;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --gold: #e4a94b;
+  --text: #f5f0e6;
+  --muted: #a8a29e;
+  --gold: #e8a33d;
 }
 * { box-sizing: border-box; }
 body {
@@ -28,6 +28,9 @@ body {
   padding: 0 12px 60px;
 }
 .wrap { max-width: 720px; width: 100%; }
+.brandbar { display: flex; align-items: center; gap: 8px; padding-top: 16px; text-decoration: none; }
+.brandbar img { width: 22px; height: auto; display: block; }
+.brandbar .wordmark { font-weight: 800; letter-spacing: 0.06em; font-size: 0.8rem; color: var(--text); }
 a { color: var(--accent); }
 nav.topnav {
   display: flex; flex-wrap: wrap; gap: 6px;
@@ -81,13 +84,14 @@ footer a { text-decoration: none; }
 article p { line-height: 1.6; }
 article .stat-callout { background: var(--card); border-left: 4px solid var(--gold); padding: 14px 18px; border-radius: 8px; margin: 18px 0; font-size: 1.05rem; }
 .cta-box { text-align: center; }
-.cta-box .btn { display: inline-block; background: var(--accent2); color: #0f172a; font-weight: 700; padding: 12px 22px; border-radius: 8px; text-decoration: none; margin: 6px; }
-.cta-box .btn.alt { background: var(--accent); }
+.cta-box .btn { display: inline-block; background: var(--gold); color: #0f172a; font-weight: 700; padding: 12px 22px; border-radius: 8px; text-decoration: none; margin: 6px; }
+.cta-box .btn.alt { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); }
 </style>
 
 </head>
 <body>
 <div class="wrap">
+<a href="index.html" class="brandbar"><img src="assets/logo.svg" alt="Tidy Systems Co logo"><span class="wordmark">TIDY SYSTEMS CO</span></a>
 <nav class="topnav"><a href="index.html">Home</a><a href="calculators.html" class="current">Calculators</a><a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="about.html">About</a></nav>
 
 <h1>Compound Interest Calculator</h1>
@@ -144,6 +148,7 @@ computeCI();
   <script async data-uid="c504c893c2" src="https://tidy-systems-co.kit.com/c504c893c2/index.js"></script>
 </div>
 <footer>
+  <div style="color:var(--gold); font-weight:600; margin-bottom:6px; font-size:0.85rem;">Personal finance, minus the fluff.</div>
   Built by <a href="https://tidysystemsco.gumroad.com" style="color:var(--accent);">Tidy Systems Co</a> &middot; free tools, no account needed
 </footer>
 </div>
