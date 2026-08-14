@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Loan Cost Calculator — Tidy Systems Co</title>
+<meta name="description" content="Free calculator: your monthly student loan payment, total interest paid, and what stretching the repayment term actually costs you. No signup.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha384-DhxhYObIMeMNGyAG7iK11OHzBIKyEIeRL0ad1iFPAOwZB8iirUlTT0O/WJJUk8+o" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+:root {
+  --bg: #0f1b27;
+  --card: #16232f;
+  --accent: #e8a33d;
+  --accent2: #34d399;
+  --danger: #f87171;
+  --text: #f5f0e6;
+  --muted: #a8a29e;
+  --gold: #e8a33d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  padding: 0 12px 60px;
+}
+.wrap { max-width: 720px; width: 100%; }
+.brandbar { display: flex; align-items: center; gap: 8px; padding-top: 16px; text-decoration: none; }
+.brandbar img { width: 22px; height: auto; display: block; }
+.brandbar .wordmark { font-weight: 800; letter-spacing: 0.06em; font-size: 0.8rem; color: var(--text); }
+a { color: var(--accent); }
+nav.topnav {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 16px 0 8px; margin-bottom: 8px;
+}
+nav.topnav a {
+  font-size: 0.8rem; text-decoration: none; color: var(--muted);
+  background: var(--card); padding: 6px 10px; border-radius: 20px; border: 1px solid #334155;
+}
+nav.topnav a.current { color: #0f172a; background: var(--accent); border-color: var(--accent); font-weight: 700; }
+h1 { font-size: 1.6rem; margin-bottom: 4px; }
+h2 { font-size: 1.2rem; margin-top: 28px; }
+p.sub { color: var(--muted); margin-top: 0; margin-bottom: 20px; font-size: 0.95rem; }
+.tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.tab-btn {
+  flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #334155;
+  background: var(--card); color: var(--muted); font-size: 0.95rem; font-weight: 600; cursor: pointer;
+}
+.tab-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+.card {
+  background: var(--card); border-radius: 14px; padding: 22px; margin-bottom: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; margin-top: 14px; }
+label:first-child { margin-top: 0; }
+input {
+  width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155;
+  background: #0f172a; color: var(--text); font-size: 1rem;
+}
+input:focus { outline: 2px solid var(--accent); }
+.result-big { font-size: 2.4rem; font-weight: 700; margin: 6px 0; }
+.result-big.ok { color: var(--accent2); }
+.result-big.warn { color: var(--danger); }
+.result-label { color: var(--muted); font-size: 0.9rem; }
+canvas { max-height: 260px; }
+footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 20px; }
+footer a { text-decoration: none; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.privacy-note { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+.compare-row { display: flex; gap: 16px; text-align: center; }
+.compare-col { flex: 1; }
+.compare-col .amt { font-size: 1.5rem; font-weight: 700; }
+.compare-col .amt.gold { color: var(--gold); }
+.compare-col .amt.muted { color: var(--muted); }
+.gap-line { text-align: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid #334155; }
+.card-list a { display: block; padding: 14px 16px; margin-bottom: 10px; background: var(--card); border-radius: 12px; text-decoration: none; border: 1px solid #334155; }
+.card-list a:hover { border-color: var(--accent); }
+.card-list .t { color: var(--text); font-weight: 600; font-size: 1rem; }
+.card-list .d { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+article p { line-height: 1.6; }
+article .stat-callout { background: var(--card); border-left: 4px solid var(--gold); padding: 14px 18px; border-radius: 8px; margin: 18px 0; font-size: 1.05rem; }
+.cta-box { text-align: center; }
+.cta-box .btn { display: inline-block; background: var(--gold); color: #0f172a; font-weight: 700; padding: 12px 22px; border-radius: 8px; text-decoration: none; margin: 6px; }
+.cta-box .btn.alt { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a href="index.html" class="brandbar"><img src="assets/logo.svg" alt="Tidy Systems Co logo"><span class="wordmark">TIDY SYSTEMS CO</span></a>
+<nav class="topnav"><a href="index.html">Home</a><a href="calculators.html" class="current">Calculators</a><a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="about.html">About</a></nav>
+
+<h1>Student Loan Cost Calculator</h1>
+<p class="sub">Your monthly payment, total interest, and what stretching the repayment term actually costs you.</p>
+
+<div class="card">
+  <div class="grid2">
+    <div>
+      <label for="slAmount">Loan balance ($)</label>
+      <input type="number" id="slAmount" value="39700" min="0">
+    </div>
+    <div>
+      <label for="slRate">Interest rate (%)</label>
+      <input type="number" id="slRate" value="6.5" min="0" max="30" step="0.01">
+    </div>
+  </div>
+  <div class="grid2">
+    <div>
+      <label for="slTerm">Your repayment term (years)</label>
+      <input type="number" id="slTerm" value="10" min="1" max="30">
+    </div>
+    <div>
+      <label for="slCompareTerm">Compare to term (years)</label>
+      <input type="number" id="slCompareTerm" value="20" min="1" max="30">
+    </div>
+  </div>
+</div>
+
+<div class="card" style="text-align:center;">
+  <div class="result-label">Monthly payment</div>
+  <div class="result-big" id="slMonthlyResult">--</div>
+  <div class="result-label" id="slTotalResult"></div>
+</div>
+
+<div class="card">
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="result-label" id="slTermALabel">10-yr interest</div>
+      <div class="amt gold" id="slInterestAResult">--</div>
+    </div>
+    <div class="compare-col">
+      <div class="result-label" id="slTermBLabel">20-yr interest</div>
+      <div class="amt muted" id="slInterestBResult">--</div>
+    </div>
+  </div>
+  <div class="gap-line">
+    <div class="result-label">Stretching the term costs you</div>
+    <div class="result-big warn" id="slGapResult">--</div>
+  </div>
+</div>
+
+<div class="card">
+  <canvas id="slChart"></canvas>
+</div>
+
+<p class="privacy-note">Everything above runs in your browser only. Nothing you type is stored or sent to a server.</p>
+
+<div class="card cta-box">
+  <div class="result-label" style="margin-bottom:10px;">Want to actually plan the fix, not just see the number?</div>
+  <a href="https://tidysystemsco.gumroad.com/l/lblgzo?utm_source=calculator&utm_medium=cta" class="btn">Get the Cash Flow &amp; Budget Tracker &rarr;</a>
+</div>
+
+<script>
+function fmtMoney(n){return '$' + Math.round(n).toLocaleString();}
+
+const slAmountEl=document.getElementById('slAmount'), slRateEl=document.getElementById('slRate');
+const slTermEl=document.getElementById('slTerm'), slCompareTermEl=document.getElementById('slCompareTerm');
+const slMonthlyResult=document.getElementById('slMonthlyResult'), slTotalResult=document.getElementById('slTotalResult');
+const slInterestAResult=document.getElementById('slInterestAResult'), slInterestBResult=document.getElementById('slInterestBResult');
+const slGapResult=document.getElementById('slGapResult');
+const slTermALabel=document.getElementById('slTermALabel'), slTermBLabel=document.getElementById('slTermBLabel');
+let slChartObj;
+
+// Standard amortizing loan payment (fixed rate, fixed term).
+function loanPayment(principal, annualRatePct, years) {
+  const n = years * 12;
+  const i = (annualRatePct / 100) / 12;
+  if (n <= 0) return 0;
+  if (i === 0) return principal / n;
+  return principal * i * Math.pow(1 + i, n) / (Math.pow(1 + i, n) - 1);
+}
+
+function loanTotalInterest(principal, annualRatePct, years) {
+  const M = loanPayment(principal, annualRatePct, years);
+  return Math.max(0, M * years * 12 - principal);
+}
+
+function computeSL() {
+  const principal = parseFloat(slAmountEl.value) || 0;
+  const rate = parseFloat(slRateEl.value) || 0;
+  const termA = parseFloat(slTermEl.value) || 1;
+  const termB = parseFloat(slCompareTermEl.value) || termA;
+
+  const monthlyA = loanPayment(principal, rate, termA);
+  const interestA = loanTotalInterest(principal, rate, termA);
+  const interestB = loanTotalInterest(principal, rate, termB);
+  const totalPaidA = principal + interestA;
+  const gap = interestB - interestA;
+
+  slMonthlyResult.textContent = fmtMoney(monthlyA);
+  slTotalResult.textContent = "You'll pay " + fmtMoney(totalPaidA) + " total on the " + termA + "-yr term";
+  slInterestAResult.textContent = fmtMoney(interestA);
+  slInterestBResult.textContent = fmtMoney(interestB);
+  slTermALabel.textContent = termA + "-yr interest";
+  slTermBLabel.textContent = termB + "-yr interest";
+
+  if (gap >= 0) {
+    slGapResult.textContent = fmtMoney(gap) + " more";
+    slGapResult.className = "result-big warn";
+  } else {
+    slGapResult.textContent = fmtMoney(Math.abs(gap)) + " less";
+    slGapResult.className = "result-big ok";
+  }
+
+  if (slChartObj) slChartObj.destroy();
+  slChartObj = new Chart(document.getElementById('slChart'), {
+    type: 'bar',
+    data: {
+      labels: [termA + '-Yr Term', termB + '-Yr Term'],
+      datasets: [
+        { label: 'Principal', data: [principal, principal], backgroundColor: '#94a3b8', stack: 's' },
+        { label: 'Interest', data: [interestA, interestB], backgroundColor: '#f87171', stack: 's' }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true, labels: { color: '#e2e8f0' } } },
+      scales: {
+        x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => '$' + v.toLocaleString() }, grid: { color: '#334155' } }
+      }
+    }
+  });
+}
+[slAmountEl, slRateEl, slTermEl, slCompareTermEl].forEach(el => el.addEventListener('input', computeSL));
+computeSL();
+</script>
+
+<div class="card" style="text-align:center;">
+  <div class="t" style="font-weight:600; margin-bottom:6px;">Get new breakdowns in your inbox</div>
+  <div class="d" style="color:var(--muted); font-size:0.85rem; margin-bottom:14px;">One email when a new calculator or article drops. No spam.</div>
+  <script async data-uid="c504c893c2" src="https://tidy-systems-co.kit.com/c504c893c2/index.js"></script>
+</div>
+<footer>
+  <div style="color:var(--gold); font-weight:600; margin-bottom:6px; font-size:0.85rem;">Personal finance, minus the fluff.</div>
+  Built by <a href="https://tidysystemsco.gumroad.com" style="color:var(--accent);">Tidy Systems Co</a> &middot; free tools, no account needed
+</footer>
+</div>
+</body>
+</html>
